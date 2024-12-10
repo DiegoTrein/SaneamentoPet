@@ -1,0 +1,124 @@
+@page "/Cadastro"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Cadastro</PageTitle>
+
+<h3>Cadastro de Pet</h3>
+
+<EditForm Model="@pet" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome:</label>
+        <InputText id="nome" class="form-control" @bind-Value="@pet.Nome" required />
+        <ValidationMessage For="@(() => pet.Nome)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="numeroChip" class="form-label">Número do Chip:</label>
+        <InputText id="numeroChip" class="form-control" @bind-Value="@pet.NumeroChip" required />
+        <ValidationMessage For="@(() => pet.NumeroChip)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="idade" class="form-label">Idade Aproximada:</label>
+        <InputNumber id="idade" class="form-control" @bind-Value="@pet.IdadeAproximada" required />
+        <ValidationMessage For="@(() => pet.IdadeAproximada)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="petTipo" class="form-label">Tipo de Pet:</label>
+        <InputText id="petTipo" class="form-control" @bind-Value="@pet.Tipo" required />
+        <ValidationMessage For="@(() => pet.Tipo)" />
+    </div>
+
+    <div class="mb-3">
+        <label>Castrado:</label>
+        <InputCheckbox @bind-Value="@pet.Castrado" />
+    </div>
+
+    <div class="mb-3">
+        <label>Vacinado:</label>
+        <InputCheckbox @bind-Value="@pet.Vacinado" />
+    </div>
+
+    <div class="mb-3">
+        <label>Sexo:</label>
+        <select @bind="@pet.Sexo" class="form-select">
+            <option value="">Selecione</option>
+            <option value="Macho">Macho</option>
+            <option value="Fêmea">Fêmea</option>
+        </select>
+        <ValidationMessage For="@(() => pet.Sexo)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="informacoesAdicionais" class="form-label">Informações Adicionais:</label>
+        <InputTextArea id="informacoesAdicionais" class="form-control" @bind-Value="@pet.InformacoesAdicionais" rows="3"></InputTextArea>
+        <ValidationMessage For="@(() => pet.InformacoesAdicionais)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+</EditForm>
+
+<!-- Modal -->
+<div class="modal fade @(isModalVisible ? "show" : "")" style="@(isModalVisible ? "display: block;" : "display: none;")" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title">Sucesso</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="@CloseModal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Cadastro realizado com sucesso!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="@CloseModal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Pet pet = new Pet();
+    private bool isModalVisible = false;
+
+    private async Task HandleValidSubmit()
+    {
+        isModalVisible = true; 
+        pet = new Pet(); 
+        await Task.Delay(3000);
+        isModalVisible = false;
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false;
+    }
+
+    public class Pet
+    {
+        [Required(ErrorMessage = "O nome é obrigatório.")]
+        public string Nome { get; set; }
+
+        [Required(ErrorMessage = "O número do chip é obrigatório.")]
+        public string NumeroChip { get; set; }
+
+        [Required(ErrorMessage = "A idade aproximada é obrigatória.")]
+        [Range(0, 30, ErrorMessage = "A idade deve estar entre 0 e 30 anos.")]
+        public int IdadeAproximada { get; set; }
+
+        [Required(ErrorMessage = "O tipo de pet é obrigatório.")]
+        public string Tipo { get; set; }
+
+        public bool Castrado { get; set; }
+        
+        public bool Vacinado { get; set; }
+
+        [Required(ErrorMessage = "O sexo é obrigatório.")]
+        public string Sexo { get; set; }
+
+        public string InformacoesAdicionais { get; set; } 
+    }
+}

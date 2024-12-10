@@ -1,0 +1,6 @@
+@saneamentopet.API_HostAddress = http://localhost:5255
+
+GET {{saneamentopet.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
